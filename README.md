@@ -10,7 +10,7 @@ source env/bin/activate
 ```bash
 docker-compose up --build
 ```
-### Build specific container 
+### Build specific container
 ```bash
 docker-compose build web
 ```

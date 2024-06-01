@@ -12,8 +12,8 @@ class PostForm(forms.ModelForm):
             "second_title",
             "description",
         ]  # Specify fields you want to include in the form
-        
-    
+
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Add Bootstrap classes to form fields
