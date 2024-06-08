@@ -12,4 +12,7 @@ urlpatterns = [
     path("api/stops/", stops_json, name="stops_json"),
     path("transfers/map/", TransferMapView.as_view(), name="transfer_map"),
     path("transfers/api/transfers/", transfers_json, name="transfers_json"),
+    path('upload_file/', FileUploadView.as_view(), name='upload'),
+    path('upload/', FileUploadView.as_view(), name='file_upload'),
+
 ]

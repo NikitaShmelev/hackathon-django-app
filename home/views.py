@@ -6,8 +6,14 @@ from django.views.generic import ListView
 from django.views.generic.edit import FormView
 
 from home.forms import TripFileForm
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+from .ParserGTFS import ParserGTFS
+import pdb
 
 
+
+from home.forms import TripFileForm
 class IndexView(ListView):
     queryset = Post.objects.all()
     template_name = "index.html"
@@ -23,12 +29,15 @@ class PostCreateView(CreateView):
 
 class FileUploadView(FormView):
     template_name = "upload.html"
+    print("FileUploadView")
+    template_name = 'upload.html'
     success_url = reverse_lazy("home_page")
     form_class = TripFileForm
 
     def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+        trip_file_instance = form.save()
+        ParserGTFS(trip_file_instance.file.path).parse()
+        return JsonResponse({"status": "success"})
 
 
 from django.views.generic import TemplateView
@@ -107,3 +116,4 @@ def transfers_json(request):
         )
 
     return JsonResponse(transfer_data, safe=False)
+    
