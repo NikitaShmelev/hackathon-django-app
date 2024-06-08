@@ -9,9 +9,24 @@
     <!-- Add Leaflet JavaScript -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <style>
+        .form-container {
+            border-radius: 15px;
+            border-width: 2px;
+            border-style: solid;
+            border-color: rgb(165, 165, 165);
+            padding-top: 5px;
+            padding-bottom: 5px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+        }
         #map {
-            height: 600px;
+            height: 100%;
             width: 100%;
+            overflow: hidden;  
+            border-radius: 15px;
+            border-width: 2px;
+            border-style: solid;
+            border-color: rgb(165, 165, 165);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
         }
         #controls {
             margin: 10px 0;
@@ -19,33 +34,36 @@
     </style>
 </head>
 <div class="flex-container">
-    <div class="container pt-2">
-        <div id="controls">
-            <button id="locate-btn">Show Me at the Map</button>
-        </div>
+    <div class="container pt-2" style="padding-right: 0px;">
         <div id="map">
         </div>
     </div>
     <div class="container pt-2">
         <!-- Form placeholder -->
-        <form>
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" class="form-control" id="name" name="name" required>
-            </div>
+        <div class="container form-container">
+            <form>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Message:</label>
+                    <textarea class="form-control" id="message" name="message" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
             
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+            <div id="controls">
+                <button class="btn btn-primary" id="locate-btn">Show Me at the Map</button>
             </div>
-            
-            <div class="form-group">
-                <label for="message">Message:</label>
-                <textarea class="form-control" id="message" name="message" required></textarea>
-            </div>
-            
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        </div>
     </div>
     <script>
         // Initialize the map
