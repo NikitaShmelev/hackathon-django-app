@@ -2,14 +2,23 @@ from GTFS import *
 import os
 
 
-files: list[str] = ['transfers.txt', 'agency.txt', 'calendar_dates.txt', 'stop_times.txt', 'shapes.txt', 'trips.txt', 'feed_info.txt', 'stops.txt', 'calendar.txt', 'routes.txt']
+files: list[str] = [
+    "transfers.txt",
+    "agency.txt",
+    "calendar_dates.txt",
+    "stop_times.txt",
+    "shapes.txt",
+    "trips.txt",
+    "feed_info.txt",
+    "stops.txt",
+    "calendar.txt",
+    "routes.txt",
+]
 
 dir_name: str = "GTFS"
 
 
-parsed_data: dict[str, list[dict[str, str]]] = {
-    
-}
+parsed_data: dict[str, list[dict[str, str]]] = {}
 
 for file_name in files:
     file = open(f"{dir_name}/{file_name}")
@@ -22,7 +31,5 @@ for file_name in files:
             line_data = line.strip().split(",")
             breakpoint()
             print()
-            
+
     break
-
-
