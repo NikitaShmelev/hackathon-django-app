@@ -218,3 +218,6 @@ class ParserGTFS:
         with zipfile.ZipFile(self.file_path, 'r') as zip_ref:
             zip_ref.extractall('tmp')
         return list(map(lambda x: (f"tmp/{x}"), os.listdir('tmp')))
+
+if __name__ == '__main__':
+    ParserGTFS('GTFS.7z').prarse()

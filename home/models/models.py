@@ -91,8 +91,8 @@ class Stops(models.Model):
 
 
 class Transfers(models.Model):
-    from_stop_id = models.ForeignKey(Stops, models.DO_NOTHING, db_column='stop_id', blank=True, null=True)
-    to_stop_id = models.ForeignKey(Stops, models.DO_NOTHING, db_column='stop_id', blank=True, null=True)
+    from_stop_id = models.IntegerField(blank=True, null=True)
+    to_stop_id = models.IntegerField(blank=True, null=True)
     transfer_type = models.BigIntegerField(blank=True, null=True)
     min_transfer_time = models.BigIntegerField(blank=True, null=True)
 
