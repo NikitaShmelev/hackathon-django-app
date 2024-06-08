@@ -6,9 +6,9 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from .base_model import BaseModel
 
-
-class Agency(models.Model):
+class Agency(BaseModel):
     agency_id = models.TextField(blank=True, null=True)
     agency_name = models.TextField(blank=True, null=True)
     agency_url = models.TextField(blank=True, null=True)
@@ -18,13 +18,13 @@ class Agency(models.Model):
     agency_fare_url = models.TextField(blank=True, null=True)
     agency_email = models.TextField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'agency'
+    # class Meta:
+    #     managed = False
+    #     db_table = 'agency'
 
 
 
-class Calendar(models.Model):
+class Calendar(BaseModel):
     service_id = models.BigIntegerField(blank=True, null=True)
     monday = models.BigIntegerField(blank=True, null=True)
     tuesday = models.BigIntegerField(blank=True, null=True)
@@ -36,33 +36,33 @@ class Calendar(models.Model):
     start_date = models.BigIntegerField(blank=True, null=True)
     end_date = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'calendar'
+    # class Meta:
+    #     managed = False
+    #     db_table = 'calendar'
 
-
-class CalendarDates(models.Model):
+class CalendarDates(BaseModel):
     service_id = models.BigIntegerField(blank=True, null=True)
     date = models.BigIntegerField(blank=True, null=True)
     exception_type = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'calendar_dates'
+    # class Meta:
+    #     managed = False
+    #     db_table = 'calendar_dates'
 
 
-class FeedInfo(models.Model):
+
+class FeedInfo(BaseModel):
     feed_publisher_name = models.TextField(blank=True, null=True)
     feed_publisher_url = models.TextField(blank=True, null=True)
     feed_lang = models.TextField(blank=True, null=True)
     feed_start_date = models.BigIntegerField(blank=True, null=True)
     feed_end_date = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'feed_info'
+    # class Meta:
+    #     managed = False
+    #     db_table = 'feed_info'
 
-class Routes(models.Model):
+class Routes(BaseModel):
     route_id = models.BigIntegerField(blank=True, null=True)
     agency_id = models.FloatField(blank=True, null=True)
     route_short_name = models.TextField(blank=True, null=True)
@@ -73,24 +73,24 @@ class Routes(models.Model):
     route_color = models.TextField(blank=True, null=True)
     route_text_color = models.TextField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'routes'
+    # class Meta:
+    #     managed = False
+    #     db_table = 'routes'
 
 
-class Shapes(models.Model):
+class Shapes(BaseModel):
     shape_id = models.BigIntegerField(blank=True, null=True)
     shape_pt_lat = models.FloatField(blank=True, null=True)
     shape_pt_lon = models.FloatField(blank=True, null=True)
     shape_pt_sequence = models.BigIntegerField(blank=True, null=True)
     shape_dist_traveled = models.FloatField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'shapes'
+    # class Meta:
+    #     managed = False
+    #     db_table = 'shapes'
 
 
-class StopTimes(models.Model):
+class StopTimes(BaseModel):
     trip_id = models.BigIntegerField(blank=True, null=True)
     arrival_time = models.TextField(blank=True, null=True)
     departure_time = models.TextField(blank=True, null=True)
@@ -101,12 +101,12 @@ class StopTimes(models.Model):
     drop_off_type = models.FloatField(blank=True, null=True)
     shape_dist_traveled = models.FloatField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'stop_times'
+    # class Meta:
+    #     managed = False
+    #     db_table = 'stop_times'
 
 
-class Stops(models.Model):
+class Stops(BaseModel):
     stop_id = models.BigIntegerField(blank=True, null=True)
     stop_code = models.FloatField(blank=True, null=True)
     stop_name = models.TextField(blank=True, null=True)
@@ -117,23 +117,23 @@ class Stops(models.Model):
     location_type = models.FloatField(blank=True, null=True)
     parent_station = models.FloatField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'stops'
+    # class Meta:
+    #     managed = False
+    #     db_table = 'stops'
 
 
-class Transfers(models.Model):
+class Transfers(BaseModel):
     from_stop_id = models.BigIntegerField(blank=True, null=True)
     to_stop_id = models.BigIntegerField(blank=True, null=True)
     transfer_type = models.BigIntegerField(blank=True, null=True)
     min_transfer_time = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'transfers'
+    # class Meta:
+    #     managed = False
+    #     db_table = 'transfers'
 
 
-class Trips(models.Model):
+class Trips(BaseModel):
     route_id = models.BigIntegerField(blank=True, null=True)
     service_id = models.BigIntegerField(blank=True, null=True)
     trip_id = models.BigIntegerField(blank=True, null=True)
@@ -144,6 +144,6 @@ class Trips(models.Model):
     shape_id = models.BigIntegerField(blank=True, null=True)
     wheelchair_accessible = models.FloatField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'trips'
+    # class Meta:
+    #     managed = False
+    #     db_table = 'trips'
