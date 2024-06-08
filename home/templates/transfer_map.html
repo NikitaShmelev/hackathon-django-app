@@ -54,8 +54,7 @@
                                 radius: 5
                             }).addTo(map).bindPopup(`To Stop ID: ${transfer.to_stop.id}, Stop Name: ${transfer.to_stop.name}`);
 
-                            var polyline = L.polyline([[fromLat, fromLon], [toLat, toLon]], {color: 'red'}).addTo(map)
-                                .bindPopup(`Transfer Type: ${transfer.transfer_type}, Min Transfer Time: ${transfer.min_transfer_time}`);
+                            
                         }
                     });
                 });
@@ -112,7 +111,7 @@
             map.setView(e.latlng, 13);
 
             // Fetch transfers for the initial map bounds
-            fetchTransfers(map.getBounds());
+            //fetchTransfers(map.getBounds());
         }
 
         // Function to handle geolocation error
@@ -127,7 +126,7 @@
 
         // Fetch transfers whenever the map is moved or zoomed
         map.on('moveend', function() {
-            fetchTransfers(map.getBounds());
+            //fetchTransfers(map.getBounds());
         });
 
         // Handle "Show Me at the Map" button click
@@ -135,25 +134,35 @@
             map.locate({setView: true, maxZoom: 16});
         });
 
-        // Add event listener for stop clicks to fetch transfers
+        // Fetch and display stops and add click event listeners for transfers
         function fetchStops(bounds) {
+            var params = new URLSearchParams({
+                north_east_lat: bounds.getNorthEast().lat,
+                north_east_lon: bounds.getNorthEast().lng,
+                south_west_lat: bounds.getSouthWest().lat,
+                south_west_lon: bounds.getSouthWest().lng
+            });
+
             fetch("{% url 'stops_near_location' %}?" + params.toString())
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(function(stop) {
-                        L.circleMarker([stop.lat, stop.lon], {
+                        var stopMarker = L.circleMarker([stop.lat, stop.lon], {
                             color: 'blue',
                             radius: 5
-                        }).addTo(map).bindPopup(`${stop.name}`)
-                        .on('click', function() {
-                            debugger;
+                        }).addTo(map).bindPopup(`${stop.name}`);
+                        
+                        stopMarker.on('click', function() {
                             fetchTransfersForStop(stop.id);
                         });
                     });
                 });
         }
 
-        fetchStops(map.getBounds());
+        // Fetch stops when the map is ready
+        map.whenReady(function() {
+            fetchStops(map.getBounds());
+        });
     </script>
 </body>
 </html>
