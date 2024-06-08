@@ -19,10 +19,6 @@ class Agency(BaseModel):
     agency_fare_url = models.TextField(blank=True, null=True)
     agency_email = models.TextField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'agency'
-
 
 class Calendar(BaseModel):
     service_id = models.BigIntegerField(blank=True, null=True)
@@ -36,19 +32,11 @@ class Calendar(BaseModel):
     start_date = models.BigIntegerField(blank=True, null=True)
     end_date = models.BigIntegerField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'calendar'
-
 
 class CalendarDates(BaseModel):
     service_id = models.BigIntegerField(blank=True, null=True)
     date = models.BigIntegerField(blank=True, null=True)
     exception_type = models.BigIntegerField(blank=True, null=True)
-
-    # class Meta:
-    #     managed = False
-    #     db_table = 'calendar_dates'
 
 
 class FeedInfo(BaseModel):
@@ -57,10 +45,6 @@ class FeedInfo(BaseModel):
     feed_lang = models.TextField(blank=True, null=True)
     feed_start_date = models.BigIntegerField(blank=True, null=True)
     feed_end_date = models.BigIntegerField(blank=True, null=True)
-
-    # class Meta:
-    #     managed = False
-    #     db_table = 'feed_info'
 
 
 class Routes(BaseModel):
@@ -74,9 +58,7 @@ class Routes(BaseModel):
     route_color = models.TextField(blank=True, null=True)
     route_text_color = models.TextField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'routes'
+
 
 
 class Shapes(BaseModel):
@@ -85,10 +67,6 @@ class Shapes(BaseModel):
     shape_pt_lon = models.FloatField(blank=True, null=True)
     shape_pt_sequence = models.BigIntegerField(blank=True, null=True)
     shape_dist_traveled = models.FloatField(blank=True, null=True)
-
-    # class Meta:
-    #     managed = False
-    #     db_table = 'shapes'
 
 
 class StopTimes(BaseModel):
@@ -102,10 +80,6 @@ class StopTimes(BaseModel):
     drop_off_type = models.FloatField(blank=True, null=True)
     shape_dist_traveled = models.FloatField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'stop_times'
-
 
 class Stops(BaseModel):
     stop_id = models.BigIntegerField(blank=True, null=True)
@@ -118,20 +92,12 @@ class Stops(BaseModel):
     location_type = models.FloatField(blank=True, null=True)
     parent_station = models.FloatField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'stops'
-
 
 class Transfers(BaseModel):
     from_stop_id = models.BigIntegerField(blank=True, null=True)
     to_stop_id = models.BigIntegerField(blank=True, null=True)
     transfer_type = models.BigIntegerField(blank=True, null=True)
     min_transfer_time = models.BigIntegerField(blank=True, null=True)
-
-    # class Meta:
-    #     managed = False
-    #     db_table = 'transfers'
 
 
 class Trips(BaseModel):
@@ -144,7 +110,4 @@ class Trips(BaseModel):
     block_id = models.BigIntegerField(blank=True, null=True)
     shape_id = models.BigIntegerField(blank=True, null=True)
     wheelchair_accessible = models.FloatField(blank=True, null=True)
-
-    # class Meta:
-    #     managed = False
-    #     db_table = 'trips'
+    
