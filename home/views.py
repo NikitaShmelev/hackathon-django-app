@@ -66,13 +66,10 @@ def stops_json(request):
     stops = Stops.objects.all()
     data = serialize("json", stops)
     return JsonResponse(data, safe=False)
-
-
 class TransferMapView(TemplateView):
-    template_name = "transfer_map.html"
+    template_name = 'transfer_map.html'
 
-
-def transfers_json(request):
+def stops_near_location(request):
     # Get bounds from the request
     north_east_lat = float(request.GET.get("north_east_lat"))
     north_east_lon = float(request.GET.get("north_east_lon"))
@@ -85,35 +82,15 @@ def transfers_json(request):
         stop_lat__gte=south_west_lat,
         stop_lon__lte=north_east_lon,
         stop_lon__gte=south_west_lon,
-    ).values_list("stop_id", flat=True)
-
-    # Filter transfers involving those stops
-    transfers = Transfers.objects.filter(
-        from_stop_id__in=stops_within_bounds, to_stop_id__in=stops_within_bounds
     )
 
-    transfer_data = []
-    for transfer in transfers:
-        from_stop = Stops.objects.get(stop_id=transfer.from_stop_id)
-        to_stop = Stops.objects.get(stop_id=transfer.to_stop_id)
-        transfer_data.append(
-            {
-                "from_stop": {
-                    "id": from_stop.stop_id,
-                    "lat": from_stop.stop_lat,
-                    "lon": from_stop.stop_lon,
-                    "name": from_stop.stop_name,
-                },
-                "to_stop": {
-                    "id": to_stop.stop_id,
-                    "lat": to_stop.stop_lat,
-                    "lon": to_stop.stop_lon,
-                    "name": to_stop.stop_name,
-                },
-                "transfer_type": transfer.transfer_type,
-                "min_transfer_time": transfer.min_transfer_time,
-            }
-        )
+    stops_data = []
+    for stop in stops_within_bounds:
+        stops_data.append({
+            'id': stop.stop_id,
+            'name': stop.stop_name,
+            'lat': stop.stop_lat,
+            'lon': stop.stop_lon,
+        })
 
-    return JsonResponse(transfer_data, safe=False)
-    
+    return JsonResponse(stops_data, safe=False)

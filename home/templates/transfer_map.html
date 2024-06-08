@@ -17,23 +17,23 @@
     </style>
 </head>
 <body>
-    <h1>Transfer Map Integration</h1>
+    <h1>Transfer Map</h1>
     <div id="controls">
-        <button id="locate-btn">Show Me at the Map</button>
+        <button id="locate-btn">Show Stops Near Me</button>
     </div>
     <div id="map"></div>
 
     <script>
         // Initialize the map with a default view
-        var map = L.map('map').setView([51.505, -0.09], 2);
+        var map = L.map('map').setView([51.505, -0.09], 13);
 
         // Add OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Function to fetch transfer data for the current map bounds
-        function fetchTransfers(bounds) {
+        // Function to fetch stop data for the current map bounds
+        function fetchStops(bounds) {
             var northEast = bounds.getNorthEast();
             var southWest = bounds.getSouthWest();
 
@@ -44,7 +44,7 @@
                 south_west_lon: southWest.lng
             });
 
-            fetch("{% url 'transfers_json' %}?" + params.toString())
+            fetch("{% url 'stops_near_location' %}?" + params.toString())
                 .then(response => response.json())
                 .then(data => {
                     // Clear existing layers except for the base tile layer
@@ -54,22 +54,11 @@
                         }
                     });
 
-                    data.forEach(function(transfer) {
-                        var fromLat = transfer.from_stop.lat;
-                        var fromLon = transfer.from_stop.lon;
-                        var toLat = transfer.to_stop.lat;
-                        var toLon = transfer.to_stop.lon;
-
-                        var fromCircle = L.circleMarker([fromLat, fromLon], {
+                    data.forEach(function(stop) {
+                        L.circleMarker([stop.lat, stop.lon], {
                             color: 'blue',
                             radius: 5
-                        }).addTo(map).bindPopup(`${transfer.from_stop.name}`);
-                        
-                        var toCircle = L.circleMarker([toLat, toLon], {
-                            color: 'blue',
-                            radius: 5
-                        }).addTo(map).bindPopup(`${transfer.to_stop.name}`);
-
+                        }).addTo(map).bindPopup(`${stop.name}`);
                     });
                 });
         }
@@ -89,8 +78,8 @@
             // Set the view to the user's location with a zoom level of 13
             map.setView(e.latlng, 13);
 
-            // Fetch transfers for the initial map bounds
-            fetchTransfers(map.getBounds());
+            // Fetch stops for the current map bounds
+            fetchStops(map.getBounds());
         }
 
         // Function to handle geolocation error
@@ -103,15 +92,13 @@
         map.on('locationerror', onLocationError);
         map.locate({setView: true, maxZoom: 16});
 
-        // Fetch transfers whenever the map is moved or zoomed
+        // Fetch stops whenever the map is moved or zoomed
         map.on('moveend', function() {
-            fetchTransfers(map.getBounds());
+            fetchStops(map.getBounds());
         });
 
-        // Handle "Show Me at the Map" button click
-        document.getElementById('locate-btn').addEventListener('click', function() {
-            map.locate({setView: true, maxZoom: 16});
-        });
+        // Initial fetch for stops when the page loads
+        fetchStops(map.getBounds());
     </script>
 </body>
 </html>
