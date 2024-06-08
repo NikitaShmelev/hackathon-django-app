@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Transfer Map</title>
+    <title>Transfer Map Integration</title>
     <!-- Add Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <!-- Add Leaflet JavaScript -->
@@ -17,48 +17,81 @@
     </style>
 </head>
 <body>
-    <h1>Transfer Map</h1>
+    <h1>Transfer Map Integration</h1>
     <div id="controls">
-        <button id="locate-btn">Show Stops Near Me</button>
+        <button id="locate-btn">Show Me at the Map</button>
     </div>
     <div id="map"></div>
 
     <script>
         // Initialize the map with a default view
-        var map = L.map('map').setView([51.505, -0.09], 13);
+        var map = L.map('map').setView([51.505, -0.09], 2);
 
         // Add OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Function to fetch stop data for the current map bounds
-        function fetchStops(bounds) {
-            var northEast = bounds.getNorthEast();
-            var southWest = bounds.getSouthWest();
-
-            var params = new URLSearchParams({
-                north_east_lat: northEast.lat,
-                north_east_lon: northEast.lng,
-                south_west_lat: southWest.lat,
-                south_west_lon: southWest.lng
-            });
-
-            fetch("{% url 'stops_near_location' %}?" + params.toString())
+        // Function to fetch transfer data for the current map bounds
+        function fetchTransfers(bounds) {
+            fetch("{% url 'transfers_json' %}")
                 .then(response => response.json())
                 .then(data => {
-                    // Clear existing layers except for the base tile layer
+                    data.forEach(function(transfer) {
+                        var fromLat = transfer.from_stop.lat;
+                        var fromLon = transfer.from_stop.lon;
+                        var toLat = transfer.to_stop.lat;
+                        var toLon = transfer.to_stop.lon;
+
+                        if (bounds.contains([fromLat, fromLon]) || bounds.contains([toLat, toLon])) {
+                            var fromCircle = L.circleMarker([fromLat, fromLon], {
+                                color: 'blue',
+                                radius: 5
+                            }).addTo(map).bindPopup(`From Stop ID: ${transfer.from_stop.id}, Stop Name: ${transfer.from_stop.name}`);
+                            
+                            var toCircle = L.circleMarker([toLat, toLon], {
+                                color: 'blue',
+                                radius: 5
+                            }).addTo(map).bindPopup(`To Stop ID: ${transfer.to_stop.id}, Stop Name: ${transfer.to_stop.name}`);
+
+                            var polyline = L.polyline([[fromLat, fromLon], [toLat, toLon]], {color: 'red'}).addTo(map)
+                                .bindPopup(`Transfer Type: ${transfer.transfer_type}, Min Transfer Time: ${transfer.min_transfer_time}`);
+                        }
+                    });
+                });
+        }
+
+        // Function to fetch transfers for the trips from a specific stop
+        function fetchTransfersForStop(stopId) {
+            fetch(`/api/transfers_for_stop/${stopId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Debugging: Log the data
+
                     map.eachLayer(function(layer) {
                         if (layer instanceof L.CircleMarker || layer instanceof L.Polyline) {
                             map.removeLayer(layer);
                         }
                     });
 
-                    data.forEach(function(stop) {
-                        L.circleMarker([stop.lat, stop.lon], {
+                    data.forEach(function(transfer) {
+                        var fromLat = transfer.from_stop.lat;
+                        var fromLon = transfer.from_stop.lon;
+                        var toLat = transfer.to_stop.lat;
+                        var toLon = transfer.to_stop.lon;
+
+                        var fromCircle = L.circleMarker([fromLat, fromLon], {
                             color: 'blue',
                             radius: 5
-                        }).addTo(map).bindPopup(`${stop.name}`);
+                        }).addTo(map).bindPopup(`From Stop ID: ${transfer.from_stop.id}, Stop Name: ${transfer.from_stop.name}`);
+                        
+                        var toCircle = L.circleMarker([toLat, toLon], {
+                            color: 'blue',
+                            radius: 5
+                        }).addTo(map).bindPopup(`To Stop ID: ${transfer.to_stop.id}, Stop Name: ${transfer.to_stop.name}`);
+
+                        var polyline = L.polyline([[fromLat, fromLon], [toLat, toLon]], {color: 'red'}).addTo(map)
+                            .bindPopup(`Transfer Type: ${transfer.transfer_type}, Min Transfer Time: ${transfer.min_transfer_time}`);
                     });
                 });
         }
@@ -78,8 +111,8 @@
             // Set the view to the user's location with a zoom level of 13
             map.setView(e.latlng, 13);
 
-            // Fetch stops for the current map bounds
-            fetchStops(map.getBounds());
+            // Fetch transfers for the initial map bounds
+            fetchTransfers(map.getBounds());
         }
 
         // Function to handle geolocation error
@@ -90,14 +123,36 @@
         // Locate the user on page load
         map.on('locationfound', onLocationFound);
         map.on('locationerror', onLocationError);
-        map.locate({setView: true, maxZoom: 16});
+        map.locate({setView: true, maxZoom: 16, watch: true});
 
-        // Fetch stops whenever the map is moved or zoomed
+        // Fetch transfers whenever the map is moved or zoomed
         map.on('moveend', function() {
-            fetchStops(map.getBounds());
+            fetchTransfers(map.getBounds());
         });
 
-        // Initial fetch for stops when the page loads
+        // Handle "Show Me at the Map" button click
+        document.getElementById('locate-btn').addEventListener('click', function() {
+            map.locate({setView: true, maxZoom: 16});
+        });
+
+        // Add event listener for stop clicks to fetch transfers
+        function fetchStops(bounds) {
+            fetch("{% url 'stops_near_location' %}?" + params.toString())
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(function(stop) {
+                        L.circleMarker([stop.lat, stop.lon], {
+                            color: 'blue',
+                            radius: 5
+                        }).addTo(map).bindPopup(`${stop.name}`)
+                        .on('click', function() {
+                            debugger;
+                            fetchTransfersForStop(stop.id);
+                        });
+                    });
+                });
+        }
+
         fetchStops(map.getBounds());
     </script>
 </body>

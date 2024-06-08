@@ -109,21 +109,21 @@ class Command(BaseCommand):
             )
 
     def load_stop_times(self):
-        df = pd.read_csv('data/GTFS/stop_times.txt')
-        for _, row in df.iterrows():
-            StopTimes.objects.update_or_create(
-                # trip_id=Trips.objects.get(trip_id=row['trip_id']),
-                stop_id=Stops.objects.get(stop_id=row['stop_id']),
-                defaults={
-                    'arrival_time': row['arrival_time'],
-                    'departure_time': row['departure_time'],
-                    'stop_sequence': row['stop_sequence'],
-                    'stop_headsign': row['stop_headsign'],
-                    'pickup_type': row['pickup_type'],
-                    'drop_off_type': row['drop_off_type'],
-                    'shape_dist_traveled': row['shape_dist_traveled']
-                }
-            )
+df = pd.read_csv('data/GTFS/stop_times.txt')
+for _, row in df.iterrows():
+    StopTimes.objects.update_or_create(
+        trip_id=Trips.objects.get(trip_id=row['trip_id']),
+        stop_id=Stops.objects.get(stop_id=row['stop_id']),
+        defaults={
+            'arrival_time': row['arrival_time'],
+            'departure_time': row['departure_time'],
+            'stop_sequence': row['stop_sequence'],
+            'stop_headsign': row['stop_headsign'],
+            'pickup_type': row['pickup_type'],
+            'drop_off_type': row['drop_off_type'],
+            'shape_dist_traveled': row['shape_dist_traveled']
+        }
+    )
 
     def load_stops(self):
         df = pd.read_csv('data/GTFS/stops.txt')
@@ -158,6 +158,7 @@ class Command(BaseCommand):
         df = pd.read_csv('data/GTFS/trips.txt')
         for _, row in df.iterrows():
             Trips.objects.update_or_create(
+                trip_id=row['trip_id'],
                 defaults={
                     'route_id': Routes.objects.get(route_id=row['route_id']),
                     'service_id': row['service_id'],
