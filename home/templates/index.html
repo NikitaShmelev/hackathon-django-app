@@ -18,29 +18,50 @@
             padding-bottom: 5px;
             box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
         }
+        .map-container {
+            height: 610px;
+            padding: 15px
+        }
         #map {
             height: 100%;
             width: 100%;
-            overflow: hidden;  
+            overflow: hidden;
             border-radius: 15px;
             border-width: 2px;
             border-style: solid;
             border-color: rgb(165, 165, 165);
             box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
         }
         #controls {
             margin: 10px 0;
         }
+        .filter-container {
+            position: absolute;
+            top: 90px; /* Adjust as needed */
+            left: 72%;
+            /*transform: translateX(-50%);  Centers the form horizontally */
+            z-index: 1000; /* Ensures the form appears above the map */
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            padding: 20px; 
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            width: 25.85vw;
+        }
+
+        @media (max-width: 768px) {
+            .filter-container {
+                width: 100%;
+                position: static;
+            }
+        }
     </style>
 </head>
 <div class="flex-container">
-    <div class="container pt-2" style="padding-right: 0px;">
+    <div class="map-container">
         <div id="map">
         </div>
-    </div>
-    <div class="container pt-2">
-        <!-- Form placeholder -->
-        <div class="container form-container">
+        <div class="filter-container">
             <form>
                 <div class="form-group">
                     <label for="name">Name:</label>
@@ -63,7 +84,7 @@
             <div id="controls">
                 <button class="btn btn-primary" id="locate-btn">Show Me at the Map</button>
             </div>
-        </div>
+    
     </div>
     <script>
         // Initialize the map

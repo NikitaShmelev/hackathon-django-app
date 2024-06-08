@@ -6,7 +6,8 @@ html {
     margin-bottom: 60px;
     font-family: 'Roboto', sans-serif; /* Margin bottom by footer height */
   }
-  .footer {
+  
+  footer {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -17,18 +18,18 @@ html {
 
 
 /* CONTAINERS WITH MAP AND FORM */
-.flex-container {
+/* .flex-container {
     display: flex;
     flex-wrap: wrap;
-}
+} */
 
-.flex-container > div {
+/* .flex-container > div {
     margin: 5px 0px 15px 0px;
     height: 600px;
     width: 50%;
-}
+} */
 
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
     .flex-container {
         flex-direction: column;
     }
@@ -37,7 +38,7 @@ html {
       margin-right: 10px;  
       width: 100%;
     }
-}
+} */
 
 
 /* New header styles */
