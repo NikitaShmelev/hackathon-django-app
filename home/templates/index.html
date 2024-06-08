@@ -1,15 +1,104 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
-
+{% load static %}
 {% block content %}
-    <div class="jumbotron">
-        <div class="container">
-            <h1>MyModel List</h1>
-            <ul class="list-group">
-                {% for post in posts %}
-                    <li class="list-group-item">{{ post.title }}</li>
-                {% endfor %}
-            </ul>
+<head>
+    <title>Shape Map</title>
+    <!-- Add Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Add Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+        #controls {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<div class="flex-container">
+    <div class="container pt-2">
+        <div id="controls">
+            <button id="locate-btn">Show Me at the Map</button>
+        </div>
+        <div id="map">
         </div>
     </div>
+    <div class="container pt-2">
+        <!-- Form placeholder -->
+        <form>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea class="form-control" id="message" name="message" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([51.505, -0.09], 2);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Fetch shapes data from the server
+        fetch("{% url 'shapes_json' %}")
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(function(shape) {
+                    var lat = shape.fields.shape_pt_lat;
+                    var lon = shape.fields.shape_pt_lon;
+                    L.marker([lat, lon]).addTo(map)
+                        .bindPopup(`Shape ID: ${shape.fields.shape_id}, Sequence: ${shape.fields.shape_pt_sequence}`);
+                });
+            });
+
+        // Fetch stops data from the server
+        fetch("{% url 'stops_json' %}")
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(function(stop) {
+                    var lat = stop.fields.stop_lat;
+                    var lon = stop.fields.stop_lon;
+                    L.marker([lat, lon], {icon: L.icon({iconUrl: 'https://maps.google.com/mapfiles/kml/shapes/bus.png', iconSize: [32, 32]})}).addTo(map)
+                        .bindPopup(`Stop ID: ${stop.fields.stop_id}, Stop Name: ${stop.fields.stop_name}`);
+                });
+            });
+
+        // Handle "Show Me at the Map" button click
+        document.getElementById('locate-btn').addEventListener('click', function() {
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+                    map.setView([lat, lon], 13);
+                    L.marker([lat, lon]).addTo(map)
+                        .bindPopup('You are here!').openPopup();
+                }, function(error) {
+                    alert('Geolocation failed: ' + error.message);
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
+    </script>
+
+    
+</div>
 {% endblock %}
