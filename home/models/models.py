@@ -6,7 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-from .base_model import BaseModel
+# from .base_model import BaseModel
 
 class Agency(models.Model):
     agency_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
@@ -17,6 +17,8 @@ class Agency(models.Model):
     agency_phone = models.TextField(blank=True, null=True)
     agency_fare_url = models.TextField(blank=True, null=True)
     agency_email = models.TextField(blank=True, null=True)
+# killjoys_app
+# export DJANGO_SETTINGS_MODULE=killjoys_app.settings
 
 
 class Calendar(models.Model):
