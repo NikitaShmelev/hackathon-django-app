@@ -10,4 +10,7 @@ urlpatterns = [
     path("map/", ShapeMapView.as_view(), name="shape_map"),
     path("api/shapes/", shapes_json, name="shapes_json"),
     path("api/stops/", stops_json, name="stops_json"),
+    path('upload_file/', FileUploadView.as_view(), name='upload'),
+    path('upload/', FileUploadView.as_view(), name='file_upload'),
+
 ]
