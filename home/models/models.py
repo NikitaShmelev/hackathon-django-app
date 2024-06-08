@@ -8,7 +8,7 @@
 from django.db import models
 from .base_model import BaseModel
 
-class Agency(BaseModel):
+class Agency(models.Model):
     agency_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
     agency_name = models.TextField(blank=True, null=True)
     agency_url = models.TextField(blank=True, null=True)
@@ -19,7 +19,7 @@ class Agency(BaseModel):
     agency_email = models.TextField(blank=True, null=True)
 
 
-class Calendar(BaseModel):
+class Calendar(models.Model):
     service_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
     monday = models.BigIntegerField(blank=True, null=True)
     tuesday = models.BigIntegerField(blank=True, null=True)
@@ -32,13 +32,13 @@ class Calendar(BaseModel):
     end_date = models.BigIntegerField(blank=True, null=True)
 
 
-class CalendarDates(BaseModel):
+class CalendarDates(models.Model):
     service_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
     date = models.BigIntegerField(blank=True, null=True)
     exception_type = models.BigIntegerField(blank=True, null=True)
 
 
-class FeedInfo(BaseModel):
+class FeedInfo(models.Model):
     feed_publisher_name = models.TextField(blank=True, null=True)
     feed_publisher_url = models.TextField(blank=True, null=True)
     feed_lang = models.TextField(blank=True, null=True)
@@ -46,7 +46,7 @@ class FeedInfo(BaseModel):
     feed_end_date = models.BigIntegerField(blank=True, null=True)
 
 
-class Routes(BaseModel):
+class Routes(models.Model):
     route_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
     agency_id = models.ForeignKey(Agency, models.DO_NOTHING, db_column='agency_id', blank=True, null=True)
     route_short_name = models.TextField(blank=True, null=True)
@@ -58,7 +58,7 @@ class Routes(BaseModel):
     route_text_color = models.TextField(blank=True, null=True)
 
 
-class Shapes(BaseModel):
+class Shapes(models.Model):
     shape_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
     shape_pt_lat = models.FloatField(blank=True, null=True)
     shape_pt_lon = models.FloatField(blank=True, null=True)
@@ -66,7 +66,7 @@ class Shapes(BaseModel):
     shape_dist_traveled = models.FloatField(blank=True, null=True)
 
 
-class StopTimes(BaseModel):
+class StopTimes(models.Model):
     trip_id = models.ForeignKey('Trips', models.DO_NOTHING, db_column='trip_id', blank=True, null=True)
     arrival_time = models.TextField(blank=True, null=True)
     departure_time = models.TextField(blank=True, null=True)
@@ -78,7 +78,7 @@ class StopTimes(BaseModel):
     shape_dist_traveled = models.FloatField(blank=True, null=True)
 
 
-class Stops(BaseModel):
+class Stops(models.Model):
     stop_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
     stop_code = models.FloatField(blank=True, null=True)
     stop_name = models.TextField(blank=True, null=True)
@@ -90,14 +90,14 @@ class Stops(BaseModel):
     parent_station = models.FloatField(blank=True, null=True)
 
 
-class Transfers(BaseModel):
+class Transfers(models.Model):
     from_stop_id = models.ForeignKey(Stops, models.DO_NOTHING, db_column='stop_id', blank=True, null=True)
     to_stop_id = models.ForeignKey(Stops, models.DO_NOTHING, db_column='stop_id', blank=True, null=True)
     transfer_type = models.BigIntegerField(blank=True, null=True)
     min_transfer_time = models.BigIntegerField(blank=True, null=True)
 
 
-class Trips(BaseModel):
+class Trips(models.Model):
     route_id = models.ForeignKey(Routes, models.DO_NOTHING, db_column='route_id', blank=True, null=True)
     service_id = models.BigIntegerField(blank=True, null=True)
     trip_id = models.BigIntegerField(blank=True, null=True)
