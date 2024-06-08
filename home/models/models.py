@@ -8,6 +8,7 @@
 from django.db import models
 from .base_model import BaseModel
 
+
 class Agency(BaseModel):
     agency_id = models.TextField(blank=True, null=True)
     agency_name = models.TextField(blank=True, null=True)
@@ -21,7 +22,6 @@ class Agency(BaseModel):
     # class Meta:
     #     managed = False
     #     db_table = 'agency'
-
 
 
 class Calendar(BaseModel):
@@ -40,6 +40,7 @@ class Calendar(BaseModel):
     #     managed = False
     #     db_table = 'calendar'
 
+
 class CalendarDates(BaseModel):
     service_id = models.BigIntegerField(blank=True, null=True)
     date = models.BigIntegerField(blank=True, null=True)
@@ -48,7 +49,6 @@ class CalendarDates(BaseModel):
     # class Meta:
     #     managed = False
     #     db_table = 'calendar_dates'
-
 
 
 class FeedInfo(BaseModel):
@@ -61,6 +61,7 @@ class FeedInfo(BaseModel):
     # class Meta:
     #     managed = False
     #     db_table = 'feed_info'
+
 
 class Routes(BaseModel):
     route_id = models.BigIntegerField(blank=True, null=True)

@@ -1,10 +1,11 @@
 from django import forms
 from home.models import TripFile
 
+
 class TripFileForm(forms.ModelForm):
     class Meta:
         model = TripFile
-        fields = ['file']
+        fields = ["file"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

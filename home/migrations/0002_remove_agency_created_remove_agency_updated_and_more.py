@@ -6,104 +6,104 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0001_initial'),
+        ("home", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='agency',
-            name='created',
+            model_name="agency",
+            name="created",
         ),
         migrations.RemoveField(
-            model_name='agency',
-            name='updated',
+            model_name="agency",
+            name="updated",
         ),
         migrations.RemoveField(
-            model_name='calendar',
-            name='created',
+            model_name="calendar",
+            name="created",
         ),
         migrations.RemoveField(
-            model_name='calendar',
-            name='updated',
+            model_name="calendar",
+            name="updated",
         ),
         migrations.RemoveField(
-            model_name='calendardates',
-            name='created',
+            model_name="calendardates",
+            name="created",
         ),
         migrations.RemoveField(
-            model_name='calendardates',
-            name='updated',
+            model_name="calendardates",
+            name="updated",
         ),
         migrations.RemoveField(
-            model_name='feedinfo',
-            name='created',
+            model_name="feedinfo",
+            name="created",
         ),
         migrations.RemoveField(
-            model_name='feedinfo',
-            name='updated',
+            model_name="feedinfo",
+            name="updated",
         ),
         migrations.RemoveField(
-            model_name='post',
-            name='created',
+            model_name="post",
+            name="created",
         ),
         migrations.RemoveField(
-            model_name='post',
-            name='updated',
+            model_name="post",
+            name="updated",
         ),
         migrations.RemoveField(
-            model_name='routes',
-            name='created',
+            model_name="routes",
+            name="created",
         ),
         migrations.RemoveField(
-            model_name='routes',
-            name='updated',
+            model_name="routes",
+            name="updated",
         ),
         migrations.RemoveField(
-            model_name='shapes',
-            name='created',
+            model_name="shapes",
+            name="created",
         ),
         migrations.RemoveField(
-            model_name='shapes',
-            name='updated',
+            model_name="shapes",
+            name="updated",
         ),
         migrations.RemoveField(
-            model_name='stops',
-            name='created',
+            model_name="stops",
+            name="created",
         ),
         migrations.RemoveField(
-            model_name='stops',
-            name='updated',
+            model_name="stops",
+            name="updated",
         ),
         migrations.RemoveField(
-            model_name='stoptimes',
-            name='created',
+            model_name="stoptimes",
+            name="created",
         ),
         migrations.RemoveField(
-            model_name='stoptimes',
-            name='updated',
+            model_name="stoptimes",
+            name="updated",
         ),
         migrations.RemoveField(
-            model_name='transfers',
-            name='created',
+            model_name="transfers",
+            name="created",
         ),
         migrations.RemoveField(
-            model_name='transfers',
-            name='updated',
+            model_name="transfers",
+            name="updated",
         ),
         migrations.RemoveField(
-            model_name='tripfile',
-            name='created',
+            model_name="tripfile",
+            name="created",
         ),
         migrations.RemoveField(
-            model_name='tripfile',
-            name='updated',
+            model_name="tripfile",
+            name="updated",
         ),
         migrations.RemoveField(
-            model_name='trips',
-            name='created',
+            model_name="trips",
+            name="created",
         ),
         migrations.RemoveField(
-            model_name='trips',
-            name='updated',
+            model_name="trips",
+            name="updated",
         ),
     ]
