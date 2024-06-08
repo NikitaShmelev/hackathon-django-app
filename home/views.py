@@ -6,6 +6,8 @@ from django.views.generic import ListView
 from django.views.generic.edit import FormView
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
+from .ParserGTFS import ParserGTFS
+import pdb
 
 
 
@@ -25,16 +27,14 @@ class PostCreateView(CreateView):
 
 
 class FileUploadView(FormView):
+    print("FileUploadView")
     template_name = 'upload.html'
     success_url = reverse_lazy("home_page")
     form_class = TripFileForm
 
     def form_valid(self, form):
-        form.save()
-        
-        return super().form_valid(form)
+        trip_file_instance = form.save()
+        ParserGTFS(trip_file_instance.file.path).parse()
+        return JsonResponse({"status": "success"})
     
-# @require_GET
-# def load_gtfs(request):
-#     trip_files = TripFile.objects.all()
-#     return JsonResponse({"files": [file.file.url for file in trip_files]})
+    

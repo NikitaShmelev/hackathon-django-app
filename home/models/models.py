@@ -17,8 +17,6 @@ class Agency(models.Model):
     agency_phone = models.TextField(blank=True, null=True)
     agency_fare_url = models.TextField(blank=True, null=True)
     agency_email = models.TextField(blank=True, null=True)
-# killjoys_app
-# export DJANGO_SETTINGS_MODULE=killjoys_app.settings
 
 
 class Calendar(models.Model):

@@ -1,6 +1,6 @@
 import os
 import zipfile
-from models import *
+from home.models import *
 
 class ParserGTFS:
     GTFS_FILES = [
@@ -15,6 +15,7 @@ class ParserGTFS:
     'shapes.txt',
     'feed_info.txt'
     ]
+    
     def __init__(self, file_path) -> None:
         self.file_path = file_path
         
@@ -25,7 +26,7 @@ class ParserGTFS:
                     func(line)
         return wrapper
     
-    def prarse(self):
+    def prase(self):
         for file in self.get_all_files().items():
             if file[1].contains('routes'):
                 self.parse_routes(file)
