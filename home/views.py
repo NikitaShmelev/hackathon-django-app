@@ -31,16 +31,10 @@ class FileUploadView(FormView):
 
     def form_valid(self, form):
         form.save()
+        
         return super().form_valid(form)
     
-@require_GET
-def your_view_function(request):
-    from_date = request.GET.get('from', None)
-    to_date = request.GET.get('to', None)
-
-    data = {
-        'from': from_date,
-        'to': to_date,
-    }
-
-    return JsonResponse(data)
+# @require_GET
+# def load_gtfs(request):
+#     trip_files = TripFile.objects.all()
+#     return JsonResponse({"files": [file.file.url for file in trip_files]})
