@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transfer Map</title>
+    <!-- Add Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Add Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+        #controls {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Transfer Map Integration</h1>
+    <div id="controls">
+        <button id="locate-btn">Show Me at the Map</button>
+    </div>
+    <div id="map"></div>
+
+    <script>
+        // Initialize the map with a default view
+        var map = L.map('map').setView([51.505, -0.09], 2);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Function to fetch transfer data for the current map bounds
+        function fetchTransfers(bounds) {
+            var northEast = bounds.getNorthEast();
+            var southWest = bounds.getSouthWest();
+
+            var params = new URLSearchParams({
+                north_east_lat: northEast.lat,
+                north_east_lon: northEast.lng,
+                south_west_lat: southWest.lat,
+                south_west_lon: southWest.lng
+            });
+
+            fetch("{% url 'transfers_json' %}?" + params.toString())
+                .then(response => response.json())
+                .then(data => {
+                    // Clear existing layers except for the base tile layer
+                    map.eachLayer(function(layer) {
+                        if (layer instanceof L.CircleMarker || layer instanceof L.Polyline) {
+                            map.removeLayer(layer);
+                        }
+                    });
+
+                    data.forEach(function(transfer) {
+                        var fromLat = transfer.from_stop.lat;
+                        var fromLon = transfer.from_stop.lon;
+                        var toLat = transfer.to_stop.lat;
+                        var toLon = transfer.to_stop.lon;
+
+                        var fromCircle = L.circleMarker([fromLat, fromLon], {
+                            color: 'blue',
+                            radius: 5
+                        }).addTo(map).bindPopup(`${transfer.from_stop.name}`);
+                        
+                        var toCircle = L.circleMarker([toLat, toLon], {
+                            color: 'blue',
+                            radius: 5
+                        }).addTo(map).bindPopup(`${transfer.to_stop.name}`);
+
+                    });
+                });
+        }
+
+        // Function to handle geolocation success
+        function onLocationFound(e) {
+            var radius = e.accuracy / 2;
+
+            L.circleMarker(e.latlng, {
+                color: 'green',
+                radius: 10
+            }).addTo(map)
+                .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+            L.circle(e.latlng, radius).addTo(map);
+
+            // Set the view to the user's location with a zoom level of 13
+            map.setView(e.latlng, 13);
+
+            // Fetch transfers for the initial map bounds
+            fetchTransfers(map.getBounds());
+        }
+
+        // Function to handle geolocation error
+        function onLocationError(e) {
+            alert(e.message);
+        }
+
+        // Locate the user on page load
+        map.on('locationfound', onLocationFound);
+        map.on('locationerror', onLocationError);
+        map.locate({setView: true, maxZoom: 16});
+
+        // Fetch transfers whenever the map is moved or zoomed
+        map.on('moveend', function() {
+            fetchTransfers(map.getBounds());
+        });
+
+        // Handle "Show Me at the Map" button click
+        document.getElementById('locate-btn').addEventListener('click', function() {
+            map.locate({setView: true, maxZoom: 16});
+        });
+    </script>
+</body>
+</html>
