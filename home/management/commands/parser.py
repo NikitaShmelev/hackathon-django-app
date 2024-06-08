@@ -26,27 +26,27 @@ class ParserGTFS:
                     func(line)
         return wrapper
     
-    def prarse(self):
+    def parse(self):
         for file in self.get_all_files().items():
-            if file[1].contains('routes'):
+            if 'routes' in file[1]:
                 self.parse_routes(file)
-            elif file[1].contains('trips'):
+            elif 'trips' in file[1]:
                 self.parse_trips(file)
-            elif file[1].contains('calendar'):
+            elif 'calendar' in file[1]:
                 self.parse_calendar(file)
-            elif file[1].contains('calendar_dates'):
+            elif 'calendar_dates' in file[1]:
                 self.parse_calendar_dates(file)
-            elif file[1].contains('transfers'):
+            elif 'transfers' in file[1]:
                 self.parse_transfers(file)
-            elif file[1].contains('feed_info'):
+            elif 'feed_info' in file[1]:
                 self.parse_feed_info(file)
-            elif file[1].contains('agency'):
+            elif 'agency' in file[1]:
                 self.parse_agency(file)
-            elif file[1].contains('shapes'):
+            elif 'shapes' in file[1]:
                 self[1].parse_shapes(file)
-            elif file[1].contains('stop_times'):
+            elif 'stop_times' in file[1]:
                 self.parse_stop_times(file)
-            elif file[1].contains('stops'):
+            elif 'stops' in file[1]:
                 self.parse_stops(file)
     
     @process_file_line_by_line
@@ -209,16 +209,16 @@ class ParserGTFS:
             print(e)
                     
     def get_all_files(self):
-        files = self.get_files_from_zip() if self.file_path.contains('.zip') else [self.file_path] 
+        files = self.get_files_from_zip() if '.zip' in self.file_path else [self.file_path] 
         file_path = {}
         for file in self.GTFS_FILES:
-            file_path[file] = [ f for f in files if f.contains(file)]
-        
+            file_path[file] = [ f for f in files if file in f]
+        return file_path
         
     def get_files_from_zip(self):
         with zipfile.ZipFile(self.file_path, 'r') as zip_ref:
             zip_ref.extractall('tmp')
         return list(map(lambda x: (f"tmp/{x}"), os.listdir('tmp')))
 
-if __name__ == '__main__':
-    ParserGTFS('GTFS.7z').prarse()
+# if __name__ == '__main__':
+#     ParserGTFS('GTFS.7z').prarse()

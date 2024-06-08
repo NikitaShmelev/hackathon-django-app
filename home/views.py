@@ -10,14 +10,12 @@ from .ParserGTFS import ParserGTFS
 import pdb
 
 
-
 from home.forms import TripFileForm
 class IndexView(ListView):
     queryset = Post.objects.all()
     template_name = "index.html"
     context_object_name = "posts"
     ordering = ["-created"]
-
 
 class PostCreateView(CreateView):
     model = Post
@@ -27,14 +25,19 @@ class PostCreateView(CreateView):
 
 
 class FileUploadView(FormView):
-    print("FileUploadView")
     template_name = 'upload.html'
     success_url = reverse_lazy("home_page")
     form_class = TripFileForm
 
+
     def form_valid(self, form):
         trip_file_instance = form.save()
         ParserGTFS(trip_file_instance.file.path).parse()
-        return JsonResponse({"status": "success"})
+        return super().form_valid(form)    
+    
+    
+    
+    # python manage.py insert_data GTFS.zip
+    
     
     

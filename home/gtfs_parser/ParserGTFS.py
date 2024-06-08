@@ -26,7 +26,7 @@ class ParserGTFS:
                     func(line)
         return wrapper
     
-    def prarse(self):
+    def parse(self):
         for file in self.get_all_files().items():
             if file[1].contains('routes'):
                 self.parse_routes(file)
@@ -219,6 +219,3 @@ class ParserGTFS:
         with zipfile.ZipFile(self.file_path, 'r') as zip_ref:
             zip_ref.extractall('tmp')
         return list(map(lambda x: (f"tmp/{x}"), os.listdir('tmp')))
-
-if __name__ == '__main__':
-    ParserGTFS('GTFS.7z').prarse()
