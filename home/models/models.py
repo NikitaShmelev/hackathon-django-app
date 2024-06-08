@@ -9,7 +9,7 @@ from django.db import models
 from .base_model import BaseModel
 
 class Agency(BaseModel):
-    agency_id = models.TextField(blank=True, null=True)
+    agency_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
     agency_name = models.TextField(blank=True, null=True)
     agency_url = models.TextField(blank=True, null=True)
     agency_timezone = models.TextField(blank=True, null=True)
@@ -18,14 +18,9 @@ class Agency(BaseModel):
     agency_fare_url = models.TextField(blank=True, null=True)
     agency_email = models.TextField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'agency'
-
-
 
 class Calendar(BaseModel):
-    service_id = models.BigIntegerField(blank=True, null=True)
+    service_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
     monday = models.BigIntegerField(blank=True, null=True)
     tuesday = models.BigIntegerField(blank=True, null=True)
     wednesday = models.BigIntegerField(blank=True, null=True)
@@ -36,19 +31,11 @@ class Calendar(BaseModel):
     start_date = models.BigIntegerField(blank=True, null=True)
     end_date = models.BigIntegerField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'calendar'
 
 class CalendarDates(BaseModel):
-    service_id = models.BigIntegerField(blank=True, null=True)
+    service_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
     date = models.BigIntegerField(blank=True, null=True)
     exception_type = models.BigIntegerField(blank=True, null=True)
-
-    # class Meta:
-    #     managed = False
-    #     db_table = 'calendar_dates'
-
 
 
 class FeedInfo(BaseModel):
@@ -58,13 +45,10 @@ class FeedInfo(BaseModel):
     feed_start_date = models.BigIntegerField(blank=True, null=True)
     feed_end_date = models.BigIntegerField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'feed_info'
 
 class Routes(BaseModel):
-    route_id = models.BigIntegerField(blank=True, null=True)
-    agency_id = models.FloatField(blank=True, null=True)
+    route_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
+    agency_id = models.ForeignKey(Agency, models.DO_NOTHING, db_column='agency_id', blank=True, null=True)
     route_short_name = models.TextField(blank=True, null=True)
     route_long_name = models.TextField(blank=True, null=True)
     route_desc = models.FloatField(blank=True, null=True)
@@ -73,41 +57,29 @@ class Routes(BaseModel):
     route_color = models.TextField(blank=True, null=True)
     route_text_color = models.TextField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'routes'
-
 
 class Shapes(BaseModel):
-    shape_id = models.BigIntegerField(blank=True, null=True)
+    shape_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
     shape_pt_lat = models.FloatField(blank=True, null=True)
     shape_pt_lon = models.FloatField(blank=True, null=True)
     shape_pt_sequence = models.BigIntegerField(blank=True, null=True)
     shape_dist_traveled = models.FloatField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'shapes'
-
 
 class StopTimes(BaseModel):
-    trip_id = models.BigIntegerField(blank=True, null=True)
+    trip_id = models.ForeignKey('Trips', models.DO_NOTHING, db_column='trip_id', blank=True, null=True)
     arrival_time = models.TextField(blank=True, null=True)
     departure_time = models.TextField(blank=True, null=True)
-    stop_id = models.BigIntegerField(blank=True, null=True)
+    stop_id = models.ForeignKey('Stops', models.DO_NOTHING, db_column='stop_id', blank=True, null=True)
     stop_sequence = models.BigIntegerField(blank=True, null=True)
     stop_headsign = models.FloatField(blank=True, null=True)
     pickup_type = models.FloatField(blank=True, null=True)
     drop_off_type = models.FloatField(blank=True, null=True)
     shape_dist_traveled = models.FloatField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'stop_times'
-
 
 class Stops(BaseModel):
-    stop_id = models.BigIntegerField(blank=True, null=True)
+    stop_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
     stop_code = models.FloatField(blank=True, null=True)
     stop_name = models.TextField(blank=True, null=True)
     stop_desc = models.FloatField(blank=True, null=True)
@@ -117,33 +89,21 @@ class Stops(BaseModel):
     location_type = models.FloatField(blank=True, null=True)
     parent_station = models.FloatField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'stops'
-
 
 class Transfers(BaseModel):
-    from_stop_id = models.BigIntegerField(blank=True, null=True)
-    to_stop_id = models.BigIntegerField(blank=True, null=True)
+    from_stop_id = models.ForeignKey(Stops, models.DO_NOTHING, db_column='stop_id', blank=True, null=True)
+    to_stop_id = models.ForeignKey(Stops, models.DO_NOTHING, db_column='stop_id', blank=True, null=True)
     transfer_type = models.BigIntegerField(blank=True, null=True)
     min_transfer_time = models.BigIntegerField(blank=True, null=True)
 
-    # class Meta:
-    #     managed = False
-    #     db_table = 'transfers'
-
 
 class Trips(BaseModel):
-    route_id = models.BigIntegerField(blank=True, null=True)
+    route_id = models.ForeignKey(Routes, models.DO_NOTHING, db_column='route_id', blank=True, null=True)
     service_id = models.BigIntegerField(blank=True, null=True)
     trip_id = models.BigIntegerField(blank=True, null=True)
     trip_headsign = models.FloatField(blank=True, null=True)
     trip_short_name = models.FloatField(blank=True, null=True)
     direction_id = models.BigIntegerField(blank=True, null=True)
     block_id = models.BigIntegerField(blank=True, null=True)
-    shape_id = models.BigIntegerField(blank=True, null=True)
+    shape_id = models.ForeignKey(Shapes, models.DO_NOTHING, db_column='shape_id', blank=True, null=True)
     wheelchair_accessible = models.FloatField(blank=True, null=True)
-
-    # class Meta:
-    #     managed = False
-    #     db_table = 'trips'

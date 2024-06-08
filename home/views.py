@@ -4,6 +4,10 @@ from django.urls import reverse_lazy
 from .forms import PostForm
 from django.views.generic import ListView
 from django.views.generic.edit import FormView
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+
+
 
 from home.forms import TripFileForm
 class IndexView(ListView):
@@ -28,3 +32,15 @@ class FileUploadView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+    
+@require_GET
+def your_view_function(request):
+    from_date = request.GET.get('from', None)
+    to_date = request.GET.get('to', None)
+
+    data = {
+        'from': from_date,
+        'to': to_date,
+    }
+
+    return JsonResponse(data)
