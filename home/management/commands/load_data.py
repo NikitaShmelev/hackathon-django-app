@@ -14,8 +14,8 @@ class Command(BaseCommand):
         self.load_feed_info()
         self.load_routes()
         self.load_shapes()
-        self.load_stop_times()
         self.load_stops()
+        self.load_stop_times()
         self.load_transfers()
         self.load_trips()
         self.stdout.write(self.style.SUCCESS('Successfully loaded all data'))
@@ -112,7 +112,7 @@ class Command(BaseCommand):
         df = pd.read_csv('data/GTFS/stop_times.txt')
         for _, row in df.iterrows():
             StopTimes.objects.update_or_create(
-                trip_id=Trips.objects.get(trip_id=row['trip_id']),
+                # trip_id=Trips.objects.get(trip_id=row['trip_id']),
                 stop_id=Stops.objects.get(stop_id=row['stop_id']),
                 defaults={
                     'arrival_time': row['arrival_time'],
