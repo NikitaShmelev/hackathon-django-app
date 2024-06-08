@@ -59,7 +59,7 @@ class Routes(models.Model):
 
 
 class Shapes(models.Model):
-    shape_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
+    shape_id = models.BigIntegerField(blank=True, null=False)
     shape_pt_lat = models.FloatField(blank=True, null=True)
     shape_pt_lon = models.FloatField(blank=True, null=True)
     shape_pt_sequence = models.BigIntegerField(blank=True, null=True)
@@ -82,7 +82,7 @@ class Stops(models.Model):
     stop_id = models.BigIntegerField(blank=True, null=False, primary_key=True)
     stop_code = models.FloatField(blank=True, null=True)
     stop_name = models.TextField(blank=True, null=True)
-    stop_desc = models.FloatField(blank=True, null=True)
+    stop_desc = models.TextField(blank=True, null=True)
     stop_lat = models.FloatField(blank=True, null=True)
     stop_lon = models.FloatField(blank=True, null=True)
     stop_url = models.FloatField(blank=True, null=True)

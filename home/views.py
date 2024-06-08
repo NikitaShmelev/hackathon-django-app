@@ -12,13 +12,11 @@ from .ParserGTFS import ParserGTFS
 import pdb
 
 
-
 from home.forms import TripFileForm
 class IndexView(ListView):
     queryset = Post.objects.all()
     template_name = "index.html"
     context_object_name = "posts"
-
 
 class PostCreateView(CreateView):
     model = Post
@@ -33,6 +31,7 @@ class FileUploadView(FormView):
     template_name = 'upload.html'
     success_url = reverse_lazy("home_page")
     form_class = TripFileForm
+
 
     def form_valid(self, form):
         trip_file_instance = form.save()
@@ -97,8 +96,6 @@ def transfers_json(request):
             })
     return JsonResponse(transfer_data, safe=False)
 
-
-
 def transfers_for_stop(request, stop_id):
     # Find all trip_ids for the given stop
     trip_ids = StopTimes.objects.filter(stop_id=stop_id).values_list('trip_id', flat=True)
@@ -161,3 +158,10 @@ def stops_near_location(request):
         })
 
     return JsonResponse(stops_data, safe=False)
+    
+    
+    
+    # python manage.py insert_data GTFS.zip
+    
+    
+    
