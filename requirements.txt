@@ -2,7 +2,6 @@ Django==5.0.6
 psycopg2-binary==2.9.9
 django-extensions==3.2.3
 ipython==8.25.0
-celery==5.4.0
 numpy
 pandas
 SQLAlchemy
