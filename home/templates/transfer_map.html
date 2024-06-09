@@ -32,34 +32,6 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Function to fetch transfer data for the current map bounds
-        function fetchTransfers(bounds) {
-            fetch("{% url 'transfers_json' %}")
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(function(transfer) {
-                        var fromLat = transfer.from_stop.lat;
-                        var fromLon = transfer.from_stop.lon;
-                        var toLat = transfer.to_stop.lat;
-                        var toLon = transfer.to_stop.lon;
-
-                        if (bounds.contains([fromLat, fromLon]) || bounds.contains([toLat, toLon])) {
-                            var fromCircle = L.circleMarker([fromLat, fromLon], {
-                                color: 'blue',
-                                radius: 5
-                            }).addTo(map).bindPopup(`From Stop ID: ${transfer.from_stop.id}, Stop Name: ${transfer.from_stop.name}`);
-                            
-                            var toCircle = L.circleMarker([toLat, toLon], {
-                                color: 'blue',
-                                radius: 5
-                            }).addTo(map).bindPopup(`To Stop ID: ${transfer.to_stop.id}, Stop Name: ${transfer.to_stop.name}`);
-
-                            
-                        }
-                    });
-                });
-        }
-
         // Function to fetch transfers for the trips from a specific stop
         function fetchTransfersForStop(stopId) {
             fetch(`/api/transfers_for_stop/${stopId}/`)
@@ -110,8 +82,8 @@
             // Set the view to the user's location with a zoom level of 13
             map.setView(e.latlng, 13);
 
-            // Fetch transfers for the initial map bounds
-            //fetchTransfers(map.getBounds());
+            // Fetch stops for the initial map bounds
+            fetchStops(map.getBounds());
         }
 
         // Function to handle geolocation error
@@ -124,9 +96,9 @@
         map.on('locationerror', onLocationError);
         map.locate({setView: true, maxZoom: 16, watch: true});
 
-        // Fetch transfers whenever the map is moved or zoomed
+        // Fetch stops whenever the map is moved or zoomed
         map.on('moveend', function() {
-            //fetchTransfers(map.getBounds());
+            fetchStops(map.getBounds());
         });
 
         // Handle "Show Me at the Map" button click
@@ -143,9 +115,15 @@
                 south_west_lon: bounds.getSouthWest().lng
             });
 
-            fetch("{% url 'stops_near_location' %}?" + params.toString())
+            fetch("/api/stops_near_location/?" + params.toString())
                 .then(response => response.json())
                 .then(data => {
+                    map.eachLayer(function(layer) {
+                        if (layer instanceof L.CircleMarker) {
+                            map.removeLayer(layer);
+                        }
+                    });
+
                     data.forEach(function(stop) {
                         var stopMarker = L.circleMarker([stop.lat, stop.lon], {
                             color: 'blue',

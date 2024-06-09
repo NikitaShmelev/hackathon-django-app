@@ -97,30 +97,7 @@ def transfers_json(request):
             })
     return JsonResponse(transfer_data, safe=False)
 
-def transfers_json(request):
-    transfers = Transfers.objects.all()
-    transfer_data = []
-    for transfer in transfers:
-        from_stop = Stops.objects.filter(stop_id=transfer.from_stop_id).first()
-        to_stop = Stops.objects.filter(stop_id=transfer.to_stop_id).first()
-        if from_stop and to_stop:
-            transfer_data.append({
-                'from_stop': {
-                    'id': from_stop.stop_id,
-                    'lat': from_stop.stop_lat,
-                    'lon': from_stop.stop_lon,
-                    'name': from_stop.stop_name
-                },
-                'to_stop': {
-                    'id': to_stop.stop_id,
-                    'lat': to_stop.stop_lat,
-                    'lon': to_stop.stop_lon,
-                    'name': to_stop.stop_name
-                },
-                'transfer_type': transfer.transfer_type,
-                'min_transfer_time': transfer.min_transfer_time
-            })
-    return JsonResponse(transfer_data, safe=False)
+
 
 def transfers_for_stop(request, stop_id):
     # Find all trip_ids for the given stop
