@@ -4,7 +4,10 @@ from django.urls import reverse_lazy
 from .forms import PostForm
 from django.views.generic import ListView
 from django.views.generic.edit import FormView
-
+from django.views.generic import TemplateView
+from django.core.serializers import serialize
+from django.http import JsonResponse
+from home.models import Shapes, Stops
 from home.forms import TripFileForm
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
@@ -35,13 +38,6 @@ class FileUploadView(FormView):
         trip_file_instance = form.save()
         ParserGTFS(trip_file_instance.file.path).parse()
         return JsonResponse({"status": "success"})
-
-
-from django.views.generic import TemplateView
-from django.core.serializers import serialize
-from django.http import JsonResponse
-from home.models import Shapes, Stops
-
 
 class ShapeMapView(TemplateView):
     template_name = "shape_map.html"
@@ -183,7 +179,6 @@ def shape_for_route(request, route_id):
         })
     
     return JsonResponse(shapes_data, safe=False)
-
 
 def routes_for_stop(request, stop_id):
     try:
