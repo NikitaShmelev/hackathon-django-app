@@ -159,10 +159,7 @@ def stops_near_location(request):
         })
 
     return JsonResponse(stops_data, safe=False)
-    
-
-# gtfs_app/views.py
-
+      
 def stops_for_route(request, route_id):
     trips = Trips.objects.filter(route_id=route_id).values_list('trip_id', flat=True)
     
