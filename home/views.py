@@ -9,7 +9,8 @@ from home.forms import TripFileForm
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from .ParserGTFS import ParserGTFS
-import pdb
+from django.shortcuts import render
+
 
 
 from home.forms import TripFileForm
@@ -159,9 +160,42 @@ def stops_near_location(request):
 
     return JsonResponse(stops_data, safe=False)
     
+
+# gtfs_app/views.py
+
+def stops_for_route(request, route_id):
+    trips = Trips.objects.filter(route_id=route_id).values_list('trip_id', flat=True)
     
+    stop_times = StopTimes.objects.filter(trip_id__in=trips).order_by('stop_sequence')
     
-    # python manage.py insert_data GTFS.zip
+    stop_ids = stop_times.values_list('stop_id', flat=True).distinct()
+    stops = Stops.objects.filter(stop_id__in=stop_ids)
+    stops_list = list(stops.values('stop_id', 'stop_name', 'stop_lat', 'stop_lon'))
     
+    return JsonResponse(stops_list, safe=False)
     
+def shape_for_route(request, route_id):
+    trips = Trips.objects.filter(route_id=route_id).values_list('trip_id', flat=True)
+    shape_ids = trips.values_list('shape_id', flat=True).distinct()
     
+    shapes = Shapes.objects.filter(shape_id__in=shape_ids).order_by('shape_id', 'shape_pt_sequence')
+    shapes_data = []
+    for shape in shapes:
+        shapes_data.append({
+            'shape_id': shape.shape_id,
+            'shape_pt_lat': shape.shape_pt_lat,
+            'shape_pt_lon': shape.shape_pt_lon,
+            'shape_pt_sequence': shape.shape_pt_sequence
+        })
+    
+    return JsonResponse(shapes_data, safe=False)
+
+
+def routes_for_stop(request, stop_id):
+    try:
+        stop_times = StopTimes.objects.filter(stop_id=stop_id)
+        unique_route_ids = stop_times.values_list('trip_id', flat=True).distinct()
+        return JsonResponse(list(unique_route_ids), safe=False)
+    except Stops.DoesNotExist:
+        return JsonResponse({'error': 'Stop not found'}, status=404)
+
