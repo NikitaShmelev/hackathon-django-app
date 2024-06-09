@@ -159,29 +159,10 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Fetch shapes data from the server
-        fetch("{% url 'shapes_json' %}")
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(function(shape) {
-                    var lat = shape.fields.shape_pt_lat;
-                    var lon = shape.fields.shape_pt_lon;
-                    L.marker([lat, lon]).addTo(map)
-                        .bindPopup(`Shape ID: ${shape.fields.shape_id}, Sequence: ${shape.fields.shape_pt_sequence}`);
-                });
-            });
+        
 
         // Fetch stops data from the server
-        fetch("{% url 'stops_json' %}")
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(function(stop) {
-                    var lat = stop.fields.stop_lat;
-                    var lon = stop.fields.stop_lon;
-                    L.marker([lat, lon], {icon: L.icon({iconUrl: 'https://maps.google.com/mapfiles/kml/shapes/bus.png', iconSize: [32, 32]})}).addTo(map)
-                        .bindPopup(`Stop ID: ${stop.fields.stop_id}, Stop Name: ${stop.fields.stop_name}`);
-                });
-            });
+
 
         // Handle "Show Me at the Map" button click
         document.getElementById('locate-btn').addEventListener('click', function() {

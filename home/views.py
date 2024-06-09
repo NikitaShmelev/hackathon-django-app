@@ -14,18 +14,6 @@ import pdb
 
 
 from home.forms import TripFileForm
-class IndexView(ListView):
-    queryset = Post.objects.all()
-    template_name = "index.html"
-    context_object_name = "posts"
-
-
-class PostCreateView(CreateView):
-    model = Post
-    form_class = PostForm
-    template_name = "create_view.html"
-    success_url = reverse_lazy("home_page")
-
 
 class FileUploadView(FormView):
     template_name = "upload.html"
@@ -44,28 +32,6 @@ from django.views.generic import TemplateView
 from django.core.serializers import serialize
 from django.http import JsonResponse
 from home.models import Shapes, Stops
-
-
-class ShapeMapView(TemplateView):
-    template_name = "shape_map.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["shapes"] = serialize("json", Shapes.objects.all())
-        context["stops"] = serialize("json", Stops.objects.all())
-        return context
-
-
-def shapes_json(request):
-    shapes = Shapes.objects.all()
-    data = serialize("json", shapes)
-    return JsonResponse(data, safe=False)
-
-
-def stops_json(request):
-    stops = Stops.objects.all()
-    data = serialize("json", stops)
-    return JsonResponse(data, safe=False)
 
 
 class TransferMapView(TemplateView):
@@ -97,8 +63,22 @@ def transfers_json(request):
             })
     return JsonResponse(transfer_data, safe=False)
 
-
-
+def get_stop_by_name(request):
+    name = request.GET.get("name")
+    stops = Stops.objects.filter(stop_name=name)
+    if not stops:
+        return JsonResponse({}, safe=False)
+    stop = stops[0]
+    return JsonResponse(
+        {
+            'id': stop.stop_id,
+            'name': stop.stop_name,
+            'lat': stop.stop_lat,
+            'lon': stop.stop_lon
+        },
+        safe=False
+    )
+    
 def transfers_for_stop(request, stop_id):
     # Find all trip_ids for the given stop
     trip_ids = StopTimes.objects.filter(stop_id=stop_id).values_list('trip_id', flat=True)
