@@ -35,10 +35,7 @@ class FileUploadView(FormView):
         trip_file_instance = form.save()
         ParserGTFS(trip_file_instance.file.path).parse()
         return super().form_valid(form)    
-    
-
-# gtfs_app/views.py
-
+  
 def stops_for_route(request, route_id):
     trips = Trips.objects.filter(route_id=route_id).values_list('trip_id', flat=True)
     
