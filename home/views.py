@@ -10,7 +10,6 @@ from .ParserGTFS import ParserGTFS
 from django.shortcuts import render
 
 
-
 from home.forms import TripFileForm
 class IndexView(ListView):
     queryset = Post.objects.all()
@@ -24,12 +23,10 @@ class PostCreateView(CreateView):
     template_name = "create_view.html"
     success_url = reverse_lazy("home_page")
 
-
 class FileUploadView(FormView):
     template_name = 'upload.html'
     success_url = reverse_lazy("home_page")
     form_class = TripFileForm
-
 
     def form_valid(self, form):
         trip_file_instance = form.save()
